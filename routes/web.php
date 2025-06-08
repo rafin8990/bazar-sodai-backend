@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -12,11 +13,11 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.Dashboard.index');
     })->name('dashboard');
 
-    
-    Route::post('/logout', function () {
-        Auth::logout();
-        request()->session()->invalidate();
-        request()->session()->regenerateToken();
-        return redirect('/');
-    })->name('logout');
+
+    Route::post('/logoutfromDashboard', [AuthController::class, 'logoutfromDashboard'])->name('logoutfromDashboard');
+
+    Route::get('/viewCategories', [CategoryController::class, 'viewCategories'])->name('viewCategories');
+    Route::post('/createCategory', [CategoryController::class, 'createCategory'])->name('createCategory');
+    Route::post('/categories/update/{id}', [CategoryController::class, 'updateCategory'])->name('updateCategory');
+    Route::delete('/categories/delete/{id}', [CategoryController::class, 'deleteCategory'])->name('deleteCategory');
 });

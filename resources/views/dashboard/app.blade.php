@@ -6,6 +6,9 @@
     <title>@yield('title', 'Dashboard')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @vite('resources/css/app.css')
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://kit.fontawesome.com/d703802588.js" crossorigin="anonymous"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
@@ -16,12 +19,11 @@
         <aside class="bg-green-100 w-64 hidden md:block shadow-lg">
             <img src="{{ asset('/logo/logo.png') }}" alt="logo" class="w-32 mx-auto my-4">
             <nav class="px-4 space-y-2">
-                <a href="#" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                <a href="/dashboard" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                     @click="openSidebar = false">Dashboard</a>
-                <a href="#" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
-                    @click="openSidebar = false">Users</a>
-                <a href="#" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
-                    @click="openSidebar = false">Category</a>
+                <a href="{{ route('viewCategories') }}"
+                    class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Categories</a>
                 <a href="#" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                     @click="openSidebar = false">Product</a>
             </nav>
@@ -44,12 +46,11 @@
                     </button>
                 </div>
                 <nav class="p-4 space-y-2">
-                    <a href="#" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
+                    <a href="/dashboard" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
                         @click="openSidebar = false">Dashboard</a>
-                    <a href="#" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
-                        @click="openSidebar = false">Users</a>
-                    <a href="#" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
-                        @click="openSidebar = false">Category</a>
+                    <a href="{{ route('viewCategories') }}"
+                        class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
+                        @click="openSidebar = false">Categories</a>
                     <a href="#" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
                         @click="openSidebar = false">Product</a>
                 </nav>
@@ -68,10 +69,26 @@
                     </svg>
                 </button>
 
-                <div class="text-lg font-semibold "></div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm">Hello, Admin</span>
-                    <img src="https://i.pravatar.cc/32" alt="Avatar" class="rounded-full w-8 h-8">
+                <div class="text-lg font-semibold"></div>
+
+                <!-- Avatar Dropdown -->
+                <div class="relative">
+                    <div class="flex items-center space-x-4 cursor-pointer" onclick="toggleDropdown()">
+                        <span class="text-sm">Hello, Admin</span>
+                        <img src="https://i.pravatar.cc/32" alt="Avatar" class="rounded-full w-8 h-8">
+                    </div>
+
+                    <!-- Dropdown menu -->
+                    <div id="dropdownMenu"
+                        class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-md py-2 hidden z-50">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                        <form method="POST" action="{{ route('logoutfromDashboard') }}">
+                            @csrf
+                            <button type="submit"
+                                class="block px-4 py-2 text-sm text-red-500 hover:underline cursor-pointer">Logout</button>
+                        </form>
+                    </div>
                 </div>
             </header>
 
@@ -82,6 +99,20 @@
         </div>
     </div>
 
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', function (e) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const avatar = dropdown.previousElementSibling;
+            if (!avatar.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
 </body>
 
 </html>
