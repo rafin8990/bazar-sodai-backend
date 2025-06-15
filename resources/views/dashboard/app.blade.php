@@ -24,8 +24,10 @@
                 <a href="{{ route('viewCategories') }}"
                     class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                     @click="openSidebar = false">Categories</a>
-                <a href="#" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
-                    @click="openSidebar = false">Product</a>
+                <a href="/dashboard/products" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Products</a>
+                <a href="/dashboard/custom-order" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Custom Orders</a>
             </nav>
         </aside>
 
@@ -51,8 +53,10 @@
                     <a href="{{ route('viewCategories') }}"
                         class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
                         @click="openSidebar = false">Categories</a>
-                    <a href="#" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
-                        @click="openSidebar = false">Product</a>
+                    <a href="/dashboard/products" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
+                        @click="openSidebar = false">Products</a>
+                    <a href="/dashboard/custom-order" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                        @click="openSidebar = false">Custom Orders</a>
                 </nav>
             </aside>
         </div>

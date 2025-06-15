@@ -10,7 +10,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h3 class="text-sm">Categories</h3>
-                    <p class="text-3xl font-bold">12</p>
+                    <p class="text-3xl font-bold">{{ $categories->count() }}</p>
                 </div>
                 <svg class="w-8 h-8 text-white opacity-80" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24">
@@ -23,7 +23,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h3 class="text-sm">Products</h3>
-                    <p class="text-3xl font-bold">234</p>
+                    <p class="text-3xl font-bold">{{ $products->count() }}</p>
                 </div>
                 <svg class="w-8 h-8 text-white opacity-80" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24">
@@ -37,7 +37,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h3 class="text-sm">Orders</h3>
-                    <p class="text-3xl font-bold">89</p>
+                    <p class="text-3xl font-bold">0</p>
                 </div>
                 <svg class="w-8 h-8 text-white opacity-80" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24">
@@ -50,7 +50,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h3 class="text-sm">Users</h3>
-                    <p class="text-3xl font-bold">1,045</p>
+                    <p class="text-3xl font-bold">{{ $users->count() }}</p>
                 </div>
                 <svg class="w-8 h-8 text-white opacity-80" fill="none" stroke="currentColor" stroke-width="2"
                     viewBox="0 0 24 24">
