@@ -10,9 +10,24 @@
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Product Management</h1>
-            <button @click="openCreateModal" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow">
+            <button @click="openCreateModal" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow">
                 + Create Product
             </button>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="mb-4 flex items-center gap-4">
+            <label for="categoryFilter" class="font-semibold">Filter by Category:</label>
+            <select id="categoryFilter" name="category_id" 
+                    onchange="window.location.href='?category_id='+this.value" 
+                    class="border rounded px-3 py-2">
+                <option value="">-- All Categories --</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
         </div>
 
         <!-- Product Table -->
@@ -31,7 +46,6 @@
                 </thead>
                 <tbody class="divide-y divide-gray-100">
                     @foreach($products as $product)
-
                         <tr>
                             <td class="px-4 py-2">
                                 @if($product->image)
@@ -68,6 +82,10 @@
                 </tbody>
             </table>
         </div>
+        
+        <div class="mt-4">
+            {{ $products->links() }}
+        </div>
 
         <!-- Create Product Modal -->
         <div x-show="showCreateModal"
@@ -102,6 +120,7 @@
             </div>
         </div>
     </div>
+
     <script>
         function productPage() {
             return {

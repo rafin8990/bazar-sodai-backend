@@ -1,6 +1,6 @@
 @extends('dashboard.app')
 
-@section('title', 'Manage Custom Orders')
+@section('title', 'All Orders')
 
 @section('content')
     @include('Alert.alert')
@@ -11,27 +11,16 @@
     @endphp
 
     <div class="container mx-auto px-4 py-8" x-data="{ statusFilter: 'all' }">
-        <h1 class="text-2xl font-bold mb-6">Manage Custom Orders</h1>
-
-        <!-- Search Bar -->
-        <form method="GET" action="{{ route('custom-orders.index') }}" class="mb-6">
-            <input
-                type="text"
-                name="search"
-                value="{{ request('search') }}"
-                placeholder="Search orders..."
-                class="w-full md:w-1/3 px-4 py-2 border rounded shadow-sm"
-            >
-        </form>
+        <h1 class="text-2xl font-bold mb-6">All Orders</h1>
 
         <!-- Filter Buttons -->
-        <div class="flex gap-4 mb-6">
+        <div class="flex flex-wrap gap-3 mb-6">
             <button @click="statusFilter = 'all'"
-                class="px-4 py-2 rounded bg-blue-200 "
-                :class="{ 'bg-blue-500 text-white ': statusFilter === 'all' }">All</button>
+                class="px-4 py-2 rounded bg-blue-100 hover:bg-blue-300"
+                :class="{ 'bg-blue-500 text-white': statusFilter === 'all' }">All</button>
 
             <button @click="statusFilter = 'pending'"
-                class="px-4 py-2 rounded bg-gray-200  relative"
+                class="px-4 py-2 rounded bg-yellow-100 relative hover:bg-yellow-300"
                 :class="{ 'bg-yellow-500 text-white': statusFilter === 'pending' }">
                 Pending
                 @if ($pendingCount > 0)
@@ -42,7 +31,7 @@
             </button>
 
             <button @click="statusFilter = 'processing'"
-                class="px-4 py-2 rounded bg-gray-200  relative"
+                class="px-4 py-2 rounded bg-purple-100 relative hover:bg-purple-300"
                 :class="{ 'bg-purple-500 text-white': statusFilter === 'processing' }">
                 Processing
                 @if ($processingCount > 0)
@@ -53,44 +42,61 @@
             </button>
 
             <button @click="statusFilter = 'completed'"
-                class="px-4 py-2 rounded bg-gray-200 "
+                class="px-4 py-2 rounded bg-green-100 hover:bg-green-300"
                 :class="{ 'bg-green-500 text-white': statusFilter === 'completed' }">Completed</button>
 
             <button @click="statusFilter = 'cancelled'"
-                class="px-4 py-2 rounded bg-gray-200 "
+                class="px-4 py-2 rounded bg-red-100 hover:bg-red-300"
                 :class="{ 'bg-red-500 text-white': statusFilter === 'cancelled' }">Cancelled</button>
         </div>
 
         <!-- Orders Table -->
         <div class="overflow-x-auto">
-            <table class="w-full table-auto border border-gray-300">
-                <thead class="bg-gray-100">
+            <table class="w-full table-auto border border-gray-300 shadow-sm">
+                <thead class="bg-gray-100 text-left">
                     <tr>
                         <th class="px-4 py-2 border">#</th>
-                        <th class="px-4 py-2 border">Customer Name</th>
+                        <th class="px-4 py-2 border">Customer</th>
                         <th class="px-4 py-2 border">Phone</th>
-                        <th class="px-4 py-2 border">Email</th>
-                        <th class="px-4 py-2 border">Order Details</th>
-                        <th class="px-4 py-2 border">Delivery Address</th>
+                        <th class="px-4 py-2 border">Products</th>
+                        <th class="px-4 py-2 border">Total Price</th>
                         <th class="px-4 py-2 border">Status</th>
-                        <th class="px-4 py-2 border">Actions</th>
+                        <th class="px-4 py-2 border">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($orders as $order)
                         <tr x-show="statusFilter === 'all' || statusFilter === '{{ $order->status }}'">
                             <td class="px-4 py-2 border">{{ $loop->iteration + ($orders->currentPage() - 1) * $orders->perPage() }}</td>
-                            <td class="px-4 py-2 border">{{ $order->customer_name }}</td>
-                            <td class="px-4 py-2 border">{{ $order->customer_phone ?? '-' }}</td>
-                            <td class="px-4 py-2 border">{{ $order->customer_email ?? '-' }}</td>
-                            <td class="px-4 py-2 border">{{ $order->order_details }}</td>
-                            <td class="px-4 py-2 border">{{ $order->delivery_address ?? '-' }}</td>
-                            <td class="px-4 py-2 border capitalize">{{ $order->status }}</td>
+                            <td class="px-4 py-2 border">{{ $order->user->name ?? 'Guest' }}</td>
+                            <td class="px-4 py-2 border">{{ $order->mobile_no ?? '-' }}</td>
                             <td class="px-4 py-2 border">
-                                <form action="{{ route('custom-orders.update', $order->id) }}" method="POST">
+                                <ul class="list-disc ml-4 text-sm text-gray-700">
+                                    @foreach ($order->orderItems as $item)
+                                        <li>
+                                            {{ $item->product->name ?? 'N/A' }} ({{ $item->product->weight }}) × {{ $item->quantity }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td class="px-4 py-2 border font-semibold">{{ $order->total_price }}৳</td>
+                            <td class="px-4 py-2 border capitalize text-sm font-medium">
+                                <span class="px-2 py-1 rounded text-white
+                                    @if($order->status == 'pending') bg-yellow-500
+                                    @elseif($order->status == 'processing') bg-purple-500
+                                    @elseif($order->status == 'completed') bg-green-500
+                                    @elseif($order->status == 'cancelled') bg-red-500
+                                    @endif
+                                ">
+                                    {{ $order->status }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2 border">
+                                <form action="{{ route('order.status.update', $order->id) }}" method="POST">
                                     @csrf
                                     @method('PUT')
-                                    <select name="status" class="border rounded px-2 py-1 text-sm" onchange="this.form.submit()">
+                                    <select name="status" onchange="this.form.submit()"
+                                            class="border text-sm rounded px-2 py-1">
                                         <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
                                         <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
                                         <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
@@ -101,14 +107,14 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-gray-500">No orders found.</td>
+                            <td colspan="7" class="text-center py-6 text-gray-500">No orders available.</td>
                         </tr>
                     @endforelse
                 </tbody>
             </table>
 
             <!-- Pagination -->
-            <div class="mt-4">
+            <div class="mt-6">
                 {{ $orders->links() }}
             </div>
         </div>

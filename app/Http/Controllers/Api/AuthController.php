@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -121,7 +123,6 @@ class AuthController extends Controller
 
         return redirect('/')->with('success', 'Logged out successfully');
     }
-
     public function getUser(Request $request)
     {
         $user = $request->user();
@@ -196,5 +197,45 @@ class AuthController extends Controller
             'message' => 'Token refreshed successfully',
             'token' => $token->plainTextToken,
         ], 200);
+    }
+
+
+    public function loginWithGoogle(Request $request)
+    {
+        $data = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string',
+            'role' => 'required|string'
+        ]);
+
+        $user = User::where('email', $data['email'])->first();
+
+        if ($user) {
+            $token = $user->createToken($user->name);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User logged in successfully',
+                'data' => $user,
+                'token' => $token->plainTextToken
+            ]);
+        } else {
+            $data['password'] = bcrypt($data['password']);
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+            ]);
+
+            $token = $user->createToken($user->name);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User registered successfully via Google',
+                'data' => $user,
+                'token' => $token->plainTextToken
+            ]);
+        }
     }
 }

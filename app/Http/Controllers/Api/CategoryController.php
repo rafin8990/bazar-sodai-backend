@@ -31,7 +31,7 @@ class CategoryController extends Controller
             }
 
             $file->move($destinationPath, $filename);
-            $data['icon'] = 'uploads/category_icons/' . $filename;
+            $data['icon'] = 'public/uploads/category_icons/' . $filename;
         }
 
         $category = Category::create($data);
@@ -87,7 +87,7 @@ class CategoryController extends Controller
         // Check if a new image is uploaded
         if ($request->hasFile('icon')) {
             // Delete old image if exists and path contains 'uploads/category_icons'
-            if ($category->icon && str_contains($category->icon, 'uploads/category_icons/')) {
+            if ($category->icon && str_contains($category->icon, '/public/uploads/category_icons/')) {
                 // The old image path should be relative from public/
                 $oldImagePath = public_path($category->icon); // no parse_url, because it's stored as relative path
                 if (file_exists($oldImagePath)) {
@@ -101,7 +101,7 @@ class CategoryController extends Controller
             $image->move(public_path('uploads/category_icons'), $imageName);
 
             // Save relative path to DB, NOT full url
-            $data['icon'] = 'uploads/category_icons/' . $imageName;
+            $data['icon'] = 'public/uploads/category_icons/' . $imageName;
         }
 
         $category->update($data);

@@ -10,14 +10,22 @@ use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
-    public function viewProducts()
+    public function viewProducts(Request $request)
     {
         $categories = Category::all();
+
         if ($categories->isEmpty()) {
             return redirect()->route('viewCategories')->with('error', 'No categories available. Please create a category first.');
         }
 
-        $products = Product::with('category')->get();
+        $query = Product::with('category');
+
+        if ($request->has('category_id') && $request->category_id != '') {
+            $query->where('category_id', $request->category_id);
+        }
+
+        $products = $query->paginate(10)->appends($request->only('category_id'));
+
         return view('dashboard.Product.index', compact('categories', 'products'));
     }
 
@@ -39,7 +47,7 @@ class ProductController extends Controller
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $image->move(public_path('uploads/products'), $imageName);
-            $imagePath = 'uploads/products/' . $imageName;
+            $imagePath = 'public/uploads/products/' . $imageName;
         }
 
         Product::create([
@@ -85,7 +93,7 @@ class ProductController extends Controller
             $imageName = time() . '_' . $image->getClientOriginalName();
             $destination = public_path('uploads/products');
             $image->move($destination, $imageName);
-            $product->image = 'uploads/products/' . $imageName;
+            $product->image = 'public/uploads/products/' . $imageName;
         }
 
         $product->update([
@@ -126,6 +134,12 @@ class ProductController extends Controller
             $query->where('category_id', $request->query('category'));
         }
 
+
+        if ($request->has('search')) {
+            $searchTerm = $request->query('search');
+            $query->where('name', 'like', "%{$searchTerm}%");
+        }
+
         $products = $query->get();
 
         return response()->json([
@@ -134,6 +148,7 @@ class ProductController extends Controller
             'data' => $products
         ]);
     }
+
 
     public function getProduct($id)
     {

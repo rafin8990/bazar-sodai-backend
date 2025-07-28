@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @vite('resources/css/app.css')
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- font awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://kit.fontawesome.com/d703802588.js" crossorigin="anonymous"></script>
@@ -17,10 +17,15 @@
     <div class="flex h-screen">
         <!-- Sidebar (Desktop) -->
         <aside class="bg-green-100 w-64 hidden md:block shadow-lg">
-            <img src="{{ asset('/logo/logo.png') }}" alt="logo" class="w-32 mx-auto my-4">
+            <img src="{{ asset('/public/Logo/logo.png') }}" alt="logo" class="w-32 mx-auto my-4">
             <nav class="px-4 space-y-2">
                 <a href="/dashboard" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                     @click="openSidebar = false">Dashboard</a>
+                <a href="/dashboard/sliders" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Sliders</a>
+                <a href="{{ route('advertise.index') }}"
+                    class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Advertise</a>
                 <a href="{{ route('viewCategories') }}"
                     class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                     @click="openSidebar = false">Categories</a>
@@ -28,6 +33,10 @@
                     @click="openSidebar = false">Products</a>
                 <a href="/dashboard/custom-order" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                     @click="openSidebar = false">Custom Orders</a>
+                <a href="/dashboard/orders" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Orders</a>
+                <a href="/dashboard/review" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                    @click="openSidebar = false">Reviews</a>
             </nav>
         </aside>
 
@@ -50,6 +59,11 @@
                 <nav class="p-4 space-y-2">
                     <a href="/dashboard" class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
                         @click="openSidebar = false">Dashboard</a>
+                    <a href="/dashboard/sliders" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                        @click="openSidebar = false">Sliders</a>
+                    <a href="{{ route('advertise.index') }}"
+                        class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                        @click="openSidebar = false">Advertise</a>
                     <a href="{{ route('viewCategories') }}"
                         class="block py-2 px-3 rounded text-green-600 hover:bg-indigo-100"
                         @click="openSidebar = false">Categories</a>
@@ -57,6 +71,10 @@
                         @click="openSidebar = false">Products</a>
                     <a href="/dashboard/custom-order" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
                         @click="openSidebar = false">Custom Orders</a>
+                    <a href="/dashboard/orders" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                        @click="openSidebar = false">Orders</a>
+                    <a href="/dashboard/review" class="block py-2 px-3 text-green-600 rounded hover:bg-indigo-100"
+                        @click="openSidebar = false">Reviews</a>
                 </nav>
             </aside>
         </div>
