@@ -10,7 +10,9 @@ class CategoryController extends Controller
 {
     public function viewCategories()
     {
-        $categories = Category::all();
+        $categories = Category::orderByRaw('CASE WHEN serial_no IS NULL THEN 1 ELSE 0 END, serial_no ASC')
+            ->orderBy('name', 'ASC')
+            ->get();
         return view('dashboard.Category.index', compact('categories'));
     }
 
@@ -19,6 +21,7 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,svg,gif|max:2048',
+            'serial_no' => 'nullable|integer',
         ]);
 
         if ($request->hasFile('icon')) {
@@ -41,7 +44,9 @@ class CategoryController extends Controller
 
     public function getCategories()
     {
-        $categories = Category::all();
+        $categories = Category::orderByRaw('CASE WHEN serial_no IS NULL THEN 1 ELSE 0 END, serial_no ASC')
+            ->orderBy('name', 'ASC')
+            ->get();
 
         return response()->json([
             "success" => true,
@@ -82,6 +87,7 @@ class CategoryController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'icon' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'serial_no' => 'nullable|integer',
         ]);
 
         // Check if a new image is uploaded

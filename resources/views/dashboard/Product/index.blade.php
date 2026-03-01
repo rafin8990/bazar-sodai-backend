@@ -9,18 +9,19 @@
 
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Product Management</h1>
-            <button @click="openCreateModal" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md shadow">
-                + Create Product
+            <h1 class="text-2xl font-bold text-gray-200">Product Management</h1>
+            <button @click="openCreateModal" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg hover:shadow-xl transition-colors flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                <span>Create Product</span>
             </button>
         </div>
 
         <!-- Category Filter -->
         <div class="mb-4 flex items-center gap-4">
-            <label for="categoryFilter" class="font-semibold">Filter by Category:</label>
+            <label for="categoryFilter" class="font-semibold text-gray-300">Filter by Category:</label>
             <select id="categoryFilter" name="category_id" 
                     onchange="window.location.href='?category_id='+this.value" 
-                    class="border rounded px-3 py-2">
+                    class="bg-slate-700 border border-slate-600 text-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                 <option value="">-- All Categories --</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -31,50 +32,56 @@
         </div>
 
         <!-- Product Table -->
-        <div class="overflow-x-auto bg-white rounded shadow">
-            <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-100">
+        <div class="overflow-x-auto bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+            <table class="min-w-full divide-y divide-slate-700">
+                <thead class="bg-slate-700/50">
                     <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Image</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Name</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Category</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Price</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Weight</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Featured</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600">Actions</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Image</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Name</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Category</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Price</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Weight</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Featured</th>
+                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-300">Actions</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-slate-700">
                     @foreach($products as $product)
-                        <tr>
-                            <td class="px-4 py-2">
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="px-4 py-3">
                                 @if($product->image)
-                                    <img src="/{{ $product->image }}" class="w-16 h-16 object-cover rounded"
+                                    <img src="/{{ $product->image }}" class="w-16 h-16 object-cover rounded border border-slate-600"
                                         alt="{{ $product->name }}">
                                 @else
                                     <span class="text-gray-400">No Image</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2">{{ $product->name }}</td>
-                            <td class="px-4 py-2">{{ $product->category->name }}</td>
-                            <td class="px-4 py-2">৳{{ $product->price }}</td>
-                            <td class="px-4 py-2">{{ $product->weight ?? 'N/A' }}</td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-3 text-gray-300">{{ $product->name }}</td>
+                            <td class="px-4 py-3 text-gray-300">{{ $product->category->name }}</td>
+                            <td class="px-4 py-3 text-gray-300">৳{{ $product->price }}</td>
+                            <td class="px-4 py-3 text-gray-300">{{ $product->weight ?? 'N/A' }}</td>
+                            <td class="px-4 py-3">
                                 @if($product->is_featured)
-                                    <span class="text-green-600 font-semibold">Yes</span>
+                                    <span class="px-2 py-1 rounded text-xs font-medium bg-green-900/30 text-green-400 border border-green-700/50">Yes</span>
                                 @else
-                                    <span class="text-gray-500">No</span>
+                                    <span class="px-2 py-1 rounded text-xs font-medium bg-slate-700/50 text-gray-400 border border-slate-600">No</span>
                                 @endif
                             </td>
-                            <td class="px-4 py-2 space-x-2">
+                            <td class="px-4 py-3 flex gap-2">
                                 <button @click="openEditModal({{ $product->toJson() }})"
-                                    class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded shadow">Update</button>
+                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-sm shadow transition-colors flex items-center gap-1">
+                                    <i class="fas fa-edit text-xs"></i>
+                                    <span>Update</span>
+                                </button>
                                 <form action="{{ route('product.destroy', $product->id) }}" method="POST" class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded shadow"
-                                        onclick="return confirm('Are you sure?')">Delete</button>
+                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-sm shadow transition-colors flex items-center gap-1"
+                                        onclick="return confirm('Are you sure?')">
+                                        <i class="fas fa-trash text-xs"></i>
+                                        <span>Delete</span>
+                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -83,17 +90,19 @@
             </table>
         </div>
         
-        <div class="mt-4">
+        <div class="mt-4 text-gray-300">
             {{ $products->links() }}
         </div>
 
         <!-- Create Product Modal -->
         <div x-show="showCreateModal"
-            class="fixed inset-0 backdrop-blur-sm bg-opacity-40 z-50 flex items-center justify-center" x-transition>
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl" @click.away="closeCreateModal">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h2 class="text-xl font-semibold">Create Product</h2>
-                    <button @click="closeCreateModal" class="text-gray-600 hover:text-red-600 text-2xl">&times;</button>
+            class="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-60 z-50 flex items-center justify-center" x-transition @click.self="closeCreateModal">
+            <div class="bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl border border-slate-700" @click.away="closeCreateModal">
+                <div class="flex justify-between items-center p-4 border-b border-slate-700">
+                    <h2 class="text-xl font-semibold text-gray-200">Create Product</h2>
+                    <button @click="closeCreateModal" class="text-gray-400 hover:text-gray-200 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
                 <form action="{{ route('product.store') }}" method="POST" enctype="multipart/form-data"
                     class="p-6 space-y-4">
@@ -105,11 +114,13 @@
 
         <!-- Update Product Modal -->
         <div x-show="showEditModal"
-            class="fixed inset-0 backdrop-blur-sm bg-opacity-40 z-50 flex items-center justify-center" x-transition.opacity>
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl" @click.away="closeEditModal">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h2 class="text-xl font-semibold">Update Product</h2>
-                    <button @click="closeEditModal" class="text-gray-600 hover:text-red-600 text-2xl">&times;</button>
+            class="fixed inset-0 backdrop-blur-sm bg-black bg-opacity-60 z-50 flex items-center justify-center" x-transition.opacity @click.self="closeEditModal">
+            <div class="bg-slate-800 rounded-xl shadow-2xl w-full max-w-2xl border border-slate-700" @click.away="closeEditModal">
+                <div class="flex justify-between items-center p-4 border-b border-slate-700">
+                    <h2 class="text-xl font-semibold text-gray-200">Update Product</h2>
+                    <button @click="closeEditModal" class="text-gray-400 hover:text-gray-200 transition-colors">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
                 </div>
                 <form :action="`/products/${formData.id}`" method="POST" enctype="multipart/form-data"
                     class="p-6 space-y-4">

@@ -8,93 +8,105 @@
 
         <!-- Header -->
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold">Slider Management</h1>
-            <button @click="openCreateModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                + Add New Slider
+            <h1 class="text-2xl font-bold text-gray-200">Slider Management</h1>
+            <button @click="openCreateModal()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl flex items-center gap-2">
+                <i class="fas fa-plus"></i>
+                <span>Add New Slider</span>
             </button>
         </div>
 
         <!-- Sliders Table -->
-        <div class="overflow-x-auto bg-white rounded shadow">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-gray-100">
+        <div class="overflow-x-auto bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+            <table class="min-w-full divide-y divide-slate-700 text-sm">
+                <thead class="bg-slate-700/50">
                     <tr>
-                        <th class="px-4 py-3 text-left">Image</th>
-                        <th class="px-4 py-3 text-left">Title</th>
-                        <th class="px-4 py-3 text-left">Subtitle</th>
-                        <th class="px-4 py-3 text-left">Button</th>
-                        <th class="px-4 py-3 text-left">Status</th>
-                        <th class="px-4 py-3 text-left">Action</th>
+                        <th class="px-4 py-3 text-left text-gray-300 font-semibold">Image</th>
+                        <th class="px-4 py-3 text-left text-gray-300 font-semibold">Title</th>
+                        <th class="px-4 py-3 text-left text-gray-300 font-semibold">Subtitle</th>
+                        <th class="px-4 py-3 text-left text-gray-300 font-semibold">Button</th>
+                        <th class="px-4 py-3 text-left text-gray-300 font-semibold">Status</th>
+                        <th class="px-4 py-3 text-left text-gray-300 font-semibold">Action</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200" x-show="sliders.length">
+                <tbody class="divide-y divide-slate-700" x-show="sliders.length">
                     <template x-for="slider in sliders" :key="slider.id">
-                        <tr>
-                            <td class="px-4 py-2">
-                                <img :src="'/' + slider.image" class="w-20 h-12 object-cover rounded" alt="Slider Image">
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="px-4 py-3">
+                                <img :src="'/' + slider.image" class="w-20 h-12 object-cover rounded border border-slate-600" alt="Slider Image">
                             </td>
-                            <td class="px-4 py-2" x-text="slider.title || '-'"></td>
-                            <td class="px-4 py-2" x-text="slider.subtitle || '-'"></td>
-                            <td class="px-4 py-2" x-text="slider.button_text || '-'"></td>
-                            <td class="px-4 py-2">
+                            <td class="px-4 py-3 text-gray-300" x-text="slider.title || '-'"></td>
+                            <td class="px-4 py-3 text-gray-300" x-text="slider.subtitle || '-'"></td>
+                            <td class="px-4 py-3 text-gray-300" x-text="slider.button_text || '-'"></td>
+                            <td class="px-4 py-3">
                                 <span x-text="slider.status ? 'Active' : 'Inactive'"
-                                    :class="slider.status ? 'text-green-600' : 'text-red-600'"></span>
+                                    :class="slider.status ? 'px-2 py-1 rounded text-xs font-medium bg-green-900/30 text-green-400 border border-green-700/50' : 'px-2 py-1 rounded text-xs font-medium bg-red-900/30 text-red-400 border border-red-700/50'"></span>
                             </td>
-                            <td class="px-4 py-2 flex gap-2">
+                            <td class="px-4 py-3 flex gap-2">
                                 <button @click="openEditModal(slider)"
-                                    class="bg-yellow-400 px-2 py-1 rounded text-white">Edit</button>
+                                    class="bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded text-white text-sm transition-colors flex items-center gap-1">
+                                    <i class="fas fa-edit text-xs"></i>
+                                    <span>Edit</span>
+                                </button>
                                 <button @click="deleteSlider(slider.id)"
-                                    class="bg-red-500 px-2 py-1 rounded text-white">Delete</button>
+                                    class="bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded text-white text-sm transition-colors flex items-center gap-1">
+                                    <i class="fas fa-trash text-xs"></i>
+                                    <span>Delete</span>
+                                </button>
                             </td>
                         </tr>
                     </template>
                 </tbody>
             </table>
-            <p x-show="!sliders.length" class="p-4 text-gray-600 text-center">No sliders found.</p>
+            <p x-show="!sliders.length" class="p-8 text-gray-400 text-center">No sliders found.</p>
         </div>
 
         <!-- Modal -->
-        <div class="fixed inset-0 backdrop-blur-sm bg-opacity-40 flex items-center justify-center z-50" x-show="isModalOpen"
-            x-transition>
-            <div class="bg-white w-full max-w-xl rounded-lg shadow p-6 relative">
-                <h2 class="text-xl font-semibold mb-4" x-text="form.id ? 'Update Slider' : 'Create Slider'"></h2>
+        <div class="fixed inset-0 backdrop-blur-sm bg-black/60 flex items-center justify-center z-50" x-show="isModalOpen"
+            x-transition @click.self="closeModal">
+            <div class="bg-slate-800 w-full max-w-xl rounded-xl shadow-2xl p-6 relative border border-slate-700">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-xl font-semibold text-gray-200" x-text="form.id ? 'Update Slider' : 'Create Slider'"></h2>
+                    <button @click="closeModal" class="text-gray-400 hover:text-gray-200 transition-colors">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
 
                 <form @submit.prevent="submitForm" enctype="multipart/form-data">
                     <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Title</label>
-                        <input type="text" x-model="form.title" class="w-full border px-3 py-2 rounded" />
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Title</label>
+                        <input type="text" x-model="form.title" class="w-full bg-slate-700 border border-slate-600 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Subtitle</label>
-                        <input type="text" x-model="form.subtitle" class="w-full border px-3 py-2 rounded" />
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Subtitle</label>
+                        <input type="text" x-model="form.subtitle" class="w-full bg-slate-700 border border-slate-600 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Button Text</label>
-                        <input type="text" x-model="form.button_text" class="w-full border px-3 py-2 rounded" />
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Button Text</label>
+                        <input type="text" x-model="form.button_text" class="w-full bg-slate-700 border border-slate-600 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Button Link</label>
-                        <input type="text" x-model="form.button_link" class="w-full border px-3 py-2 rounded" />
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Button Link</label>
+                        <input type="text" x-model="form.button_link" class="w-full bg-slate-700 border border-slate-600 text-gray-200 px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
                     </div>
 
                     <div class="mb-4">
-                        <label class="block text-sm font-medium mb-1">Image</label>
-                        <input type="file" @change="handleImageUpload($event)" class="w-full" />
+                        <label class="block text-sm font-medium mb-2 text-gray-300">Image</label>
+                        <input type="file" @change="handleImageUpload($event)" class="w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700 file:cursor-pointer cursor-pointer" />
                     </div>
 
-                    <div class="mb-4">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" x-model="form.status" class="mr-2" />
-                            Active
+                    <div class="mb-6">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" x-model="form.status" class="mr-2 w-4 h-4 text-blue-600 bg-slate-700 border-slate-600 rounded focus:ring-blue-500 focus:ring-2" />
+                            <span class="text-gray-300">Active</span>
                         </label>
                     </div>
 
-                    <div class="flex justify-end space-x-2">
-                        <button type="button" @click="closeModal" class="bg-gray-300 px-4 py-2 rounded">Cancel</button>
-                        <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded"
+                    <div class="flex justify-end space-x-3">
+                        <button type="button" @click="closeModal" class="bg-slate-700 hover:bg-slate-600 text-gray-200 px-4 py-2 rounded-lg transition-colors">Cancel</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors shadow-lg"
                             x-text="form.id ? 'Update' : 'Create'"></button>
                     </div>
                 </form>
